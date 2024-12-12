@@ -64,109 +64,225 @@ export const defaultMusicList = [
 export const defaultPrizeList = <IPrizeConfig[]>[
     {
         id: '001',
-        name: '三等奖',
+        name: '六等奖-吹风机',
         sort: 1,
         isAll: false,
-        count: 3,
+        count: 10,
         isUsedCount: 0,
         picture: {
-            id: '2',
-            name: '三等奖',
-            url: 'https://24years.top/resource/image/image3.png'
+            id: '',
+            name: '六等奖-吹风机',
+            url: ''
         },
         separateCount: {
             enable: true,
             countList: []
         },
-        desc: '三等奖',
+        isExclude: true,
+        desc: '六等奖-吹风机',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '002',
-        name: '二等奖',
+        name: '六等奖-颈部按摩仪',
         sort: 2,
         isAll: false,
-        count: 2,
+        count: 10,
         isUsedCount: 0,
         picture: {
             id: '1',
-            name: '二等奖',
-            url: 'https://24years.top/resource/image/image2.png'
+            name: '六等奖-颈部按摩仪',
+            url: ''
         },
         separateCount: {
             enable: false,
             countList: []
         },
-        desc: '二等奖',
+        isExclude: true,
+        desc: '六等奖-颈部按摩仪',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '003',
-        name: '一等奖',
+        name: '五等奖-小米音响',
         sort: 3,
         isAll: false,
-        count: 1,
+        count: 8,
         isUsedCount: 0,
         picture: {
-            id: '0',
-            name: '一等奖',
-            url: 'https://24years.top/resource/image/image1.png'
+            id: '',
+            name: '五等奖-小米音响',
+            url: ''
         },
         separateCount: {
             enable: false,
             countList: []
         },
-        desc: '一等奖',
+        isExclude: true,
+        desc: '五等奖-小米音响',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '004',
-        name: '超级大奖',
+        name: '五等奖-拍立得',
         sort: 4,
         isAll: false,
-        count: 1,
+        count: 7,
         isUsedCount: 0,
         picture: {
-            id: '3',
-            name: '超级奖',
-            url: 'https://24years.top/resource/image/image4.png'
+            id: '',
+            name: '五等奖-拍立得',
+            url: ''
         },
         separateCount: {
             enable: false,
             countList: []
         },
-        desc: '超级大奖',
+        isExclude: true,
+        desc: '五等奖-拍立得',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '005',
-        name: '特别奖',
+        name: '四等奖-海尔迷你冰箱',
         sort: 5,
         isAll: false,
-        count: 1,
+        count: 10,
         isUsedCount: 0,
         picture: {
-            id: '4',
-            name: '特别奖',
-            url: 'https://24years.top/resource/image/image5.png'
+            id: '',
+            name: '四等奖-海尔迷你冰箱',
+            url: ''
         },
         separateCount: {
             enable: false,
             countList: []
         },
-        desc: '特别奖',
+        isExclude: true,
+        desc: '四等奖-海尔迷你冰箱',
         isShow: true,
         isUsed: false,
         frequency: 1,
-    }
+    },
+    {
+        id: '006',
+        name: '三等奖-清空购物车',
+        sort: 6,
+        isAll: false,
+        count: 8,
+        isUsedCount: 0,
+        picture: {
+            id: '',
+            name: '三等奖-清空购物车',
+            url: ''
+        },
+        separateCount: {
+            enable: false,
+            countList: []
+        },
+        isExclude: true,
+        desc: '三等奖-清空购物车',
+        isShow: true,
+        isUsed: false,
+        frequency: 1,
+    },
+    {
+        id: '007',
+        name: '二等奖-按摩椅',
+        sort: 7,
+        isAll: false,
+        count: 2,
+        isUsedCount: 0,
+        picture: {
+            id: '',
+            name: '二等奖-按摩椅',
+            url: ''
+        },
+        separateCount: {
+            enable: false,
+            countList: []
+        },
+        isExclude: true,
+        desc: '二等奖-按摩椅',
+        isShow: true,
+        isUsed: false,
+        frequency: 1,
+    },
+    {
+        id: '008',
+        name: '二等奖-游戏机',
+        sort: 8,
+        isAll: false,
+        count: 3,
+        isUsedCount: 0,
+        picture: {
+            id: '',
+            name: '二等奖-游戏机',
+            url: ''
+        },
+        separateCount: {
+            enable: false,
+            countList: []
+        },
+        isExclude: true,
+        desc: '二等奖-游戏机',
+        isShow: true,
+        isUsed: false,
+        frequency: 1,
+    },
+    {
+        id: '009',
+        name: '一等奖-电动车',
+        sort: 9,
+        isAll: false,
+        count: 3,
+        isUsedCount: 0,
+        picture: {
+            id: '',
+            name: '一等奖-电动车',
+            url: ''
+        },
+        separateCount: {
+            enable: false,
+            countList: []
+        },
+        isExclude: true,
+        desc: '一等奖-电动车',
+        isShow: true,
+        isUsed: false,
+        frequency: 1,
+    },
+    {
+        id: '010',
+        name: '特等奖-豪华全家游',
+        sort: 10,
+        isAll: false,
+        count: 1,
+        isUsedCount: 0,
+        picture: {
+            id: '',
+            name: '特等奖-豪华全家游',
+            url: ''
+        },
+        separateCount: {
+            enable: false,
+            countList: []
+        },
+        isExclude: true,
+        desc: '特等奖-豪华全家游',
+        isShow: true,
+        isUsed: false,
+        frequency: 1,
+    },
+
 ]
 export const defaultCurrentPrize = <IPrizeConfig>{
     id: '001',
@@ -184,6 +300,7 @@ export const defaultCurrentPrize = <IPrizeConfig>{
         enable: true,
         countList: []
     },
+    isExclude: true,
     desc: '三等奖',
     isShow: true,
     isUsed: false,
@@ -205,6 +322,7 @@ export const defaultTemporaryPrize = <IPrizeConfig>{
         enable: true,
         countList: []
     },
+    isExclude: true,
     desc: '',
     isShow: false,
     isUsed: false,
@@ -234,8 +352,11 @@ export const defaultImageList = [
     },
     {
         id: '4',
-        name: '特别奖',
+        name: '四等奖-海尔迷你冰箱',
         url: 'https://24years.top/resource/image/image5.png'
     }
 ]
 export const defaultPatternList = [21, 38, 55, 54, 53, 70, 87, 88, 89, 23, 40, 57, 74, 91, 92, 93, 76, 59, 42, 25, 24, 27, 28, 29, 46, 63, 62, 61, 78, 95, 96, 97, 20, 19, 31, 48, 65, 66, 67, 84, 101, 100, 99, 32, 33]
+
+
+export const excludedUserIds = ['00400', '00401', '00402', '00403', '00404', '00405', '00406', '00407', '00408', '00409', '00410', '00411', '00412', '00413']

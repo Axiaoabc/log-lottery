@@ -28,8 +28,9 @@ const router = useRouter()
 const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
+// const excludedUserIds = personConfig.getExcludedUserIds
 
-const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
+const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList, getExcludedUserIds: excludedUserIds } = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
@@ -77,8 +78,8 @@ function initTableData() {
             tableData.value = tableData.value.concat(JSON.parse(JSON.stringify(orginPersonData)))
         }
     }
-    else{
-        tableData.value=orginPersonData.slice(0, totalCount)
+    else {
+        tableData.value = orginPersonData.slice(0, totalCount)
     }
     tableData.value = filterData(tableData.value.slice(0, totalCount), rowCount.value)
 }
@@ -348,6 +349,7 @@ function resetCamera() {
 function render() {
     renderer.value.render(scene.value, camera.value);
 }
+
 const enterLottery = async () => {
     if (!canOperate.value) {
         return
@@ -356,9 +358,9 @@ const enterLottery = async () => {
         randomBallData()
     }
     if (patternList.value.length) {
-        for(let i=0;i<patternList.value.length;i++){
-            if(i<rowCount.value*7){
-                objects.value[patternList.value[i]-1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
+        for (let i = 0; i < patternList.value.length; i++) {
+            if (i < rowCount.value * 7) {
+                objects.value[patternList.value[i] - 1].element.style.backgroundColor = rgba(cardColor.value, Math.random() * 0.5 + 0.25)
             }
         }
     }
@@ -382,8 +384,19 @@ const startLottery = () => {
         })
 
         return
+
     }
     personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
+
+    
+    if (currentPrize.value.isExclude) {
+        personPool.value = personPool.value.filter((item: IPersonConfig) => {
+            return !excludedUserIds.value.includes(item.uid)
+        })
+    }
+    // console.log('personPool', personPool.value)
+    // console.log('excludeIds', excludedUserIds.value)
+    // console.log('currentPrize', currentPrize.value)
     // 验证抽奖人数是否还够
     if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
         toast.open({
@@ -418,7 +431,7 @@ const startLottery = () => {
     }
     toast.open({
         message: `现在抽取${currentPrize.value.name} ${leftover}人`,
-        type:'default',
+        type: 'default',
         position: 'top-right',
         duration: 8000
     })
@@ -469,6 +482,7 @@ const stopLottery = async () => {
                 resetCamera()
             })
     })
+    // console.log('luckyCardList', luckyCardList.value)
 }
 // 继续
 const continueLottery = async () => {
@@ -646,7 +660,8 @@ onUnmounted(() => {
 
         <!-- 选中菜单结构 start-->
         <div id="menu">
-            <button class="btn-end " @click="enterLottery" v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
+            <button class="btn-end " @click="enterLottery"
+                v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
 
             <div class="start" v-if="currentStatus == 1">
                 <button class="btn-start" @click="startLottery"><strong>开始</strong>

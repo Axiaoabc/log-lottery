@@ -46,7 +46,7 @@ const submitTemporaryPrize = () => {
         return
     }
     temporaryPrize.value.isShow = true
-    temporaryPrize.value.id=new Date().getTime().toString()
+    temporaryPrize.value.id = new Date().getTime().toString()
     prizeConfig.setCurrentPrize(temporaryPrize.value)
 }
 const selectPrize = (item: IPrizeConfig) => {
@@ -72,17 +72,17 @@ const submitData = (value: any) => {
     selectedPrize.value!.separateCount.countList = value;
     selectedPrize.value = null
 }
-const changePersonCount=()=>{
-    temporaryPrize.value.separateCount.countList=[]
+const changePersonCount = () => {
+    temporaryPrize.value.separateCount.countList = []
 }
-const setCurrentPrize=()=>{
-for(let i=0;i<localPrizeList.value.length;i++){
-    if(localPrizeList.value[i].isUsedCount<localPrizeList.value[i].count){
-        prizeConfig.setCurrentPrize(localPrizeList.value[i])
-        
-return
+const setCurrentPrize = () => {
+    for (let i = 0; i < localPrizeList.value.length; i++) {
+        if (localPrizeList.value[i].isUsedCount < localPrizeList.value[i].count) {
+            prizeConfig.setCurrentPrize(localPrizeList.value[i])
+
+            return
+        }
     }
-}
 }
 onMounted(() => {
     prizeListContainerRef.value.style.height = getPrizeListHeight() + 'px'
@@ -115,8 +115,8 @@ onMounted(() => {
                         <div class="label">
                             <span class="label-text">获奖人数</span>
                         </div>
-                        <input type="number" v-model="temporaryPrize.count" @change="changePersonCount" placeholder="获奖人数"
-                            class="max-w-xs input-sm input input-bordered" />
+                        <input type="number" v-model="temporaryPrize.count" @change="changePersonCount"
+                            placeholder="获奖人数" class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
@@ -126,35 +126,37 @@ onMounted(() => {
                             class="max-w-xs input-sm input input-bordered" />
                     </label>
                     <label class="flex w-full max-w-xs" v-if="temporaryPrize.separateCount">
-                    <div class="label">
-                        <span class="label-text">单次抽取个数</span>
-                    </div>
-                    <div class="flex justify-start h-full" @click="selectPrize(temporaryPrize)">
-                        <ul class="flex flex-wrap w-full h-full gap-1 p-0 pt-1 m-0 cursor-pointer"
-                            v-if="temporaryPrize.separateCount.countList.length">
-                            <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
-                                v-for="se in temporaryPrize.separateCount.countList" :key="se.id">
-                                <div class="flex items-center justify-center w-full h-full tooltip"
-                                    :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
-                                    <div class="absolute left-0 z-50 h-full bg-blue-300/80"
-                                        :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
-                                    <span>{{ se.count }}</span>
-                                </div>
-                            </li>
-                        </ul>
-                        <button v-else class="btn btn-secondary btn-xs">设置</button>
-                    </div>
-                </label>
+                        <div class="label">
+                            <span class="label-text">单次抽取个数</span>
+                        </div>
+                        <div class="flex justify-start h-full" @click="selectPrize(temporaryPrize)">
+                            <ul class="flex flex-wrap w-full h-full gap-1 p-0 pt-1 m-0 cursor-pointer"
+                                v-if="temporaryPrize.separateCount.countList.length">
+                                <li class="relative flex items-center justify-center w-8 h-8 bg-slate-600/60 separated"
+                                    v-for="se in temporaryPrize.separateCount.countList" :key="se.id">
+                                    <div class="flex items-center justify-center w-full h-full tooltip"
+                                        :data-tip="'已抽取:' + se.isUsedCount + '/' + se.count">
+                                        <div class="absolute left-0 z-50 h-full bg-blue-300/80"
+                                            :style="`width:${se.isUsedCount * 100 / se.count}%`"></div>
+                                        <span>{{ se.count }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                            <button v-else class="btn btn-secondary btn-xs">设置</button>
+                        </div>
+                    </label>
                     <label class="flex w-full max-w-xs">
                         <div class="label">
                             <span class="label-text">图片</span>
                         </div>
                         <select class="flex-1 w-12 select select-warning select-sm" v-model="temporaryPrize.picture">
-                            <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }"><span>❌</span>
+                            <option v-if="temporaryPrize.picture.id" :value="{ id: '', name: '', url: '' }">
+                                <span>❌</span>
                             </option>
                             <option disabled selected>选择一张图片</option>
-                            <option class="w-auto" v-for="picItem in localImageList" :key="picItem.id" :value="picItem">{{
-                                picItem.name }}
+                            <option class="w-auto" v-for="picItem in localImageList" :key="picItem.id" :value="picItem">
+                                {{
+                                    picItem.name }}
                             </option>
                         </select>
                     </label>
@@ -167,14 +169,15 @@ onMounted(() => {
                 </div>
             </div>
         </dialog>
-        <EditSeparateDialog :totalNumber="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
-            @submitData="submitData" />
+        <EditSeparateDialog :totalNumber="selectedPrize?.count"
+            :separated-number="selectedPrize?.separateCount.countList" @submitData="submitData" />
         <div ref="prizeListContainerRef">
             <div class="h-20 w-72" :class="temporaryPrize.isShow ? 'current-prize' : ''" v-if="temporaryPrize.isShow">
-                <div class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
+                <div
+                    class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
                     <div v-if="temporaryPrize.isUsed"
                         class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
-                    <figure class="w-10 h-10 rounded-xl">
+                    <figure class="w-10 h-10 rounded-xl m-5">
                         <ImageSync v-if="temporaryPrize.picture.url" :imgItem="temporaryPrize.picture"></ImageSync>
                         <img v-else :src="defaultPrizeImage" alt="Prize" class="object-cover h-full rounded-xl" />
                     </figure>
@@ -206,28 +209,30 @@ onMounted(() => {
             </div>
             <transition name="prize-list" :appear="true">
                 <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center">
-                    <ul class="flex flex-col gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
+                    <ul class="flex flex-col-reverse gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
                             <div class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100"
                                 v-if="item.isShow">
                                 <div v-if="item.isUsed"
                                     class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
-                                <figure class="w-10 h-10 rounded-xl">
+                                <figure class="w-10 h-10 rounded-xl m-5">
                                     <ImageSync v-if="item.picture.url" :imgItem="item.picture"></ImageSync>
                                     <img v-else :src="defaultPrizeImage" alt="Prize"
                                         class="object-cover h-full rounded-xl" />
                                 </figure>
-                                <div class="items-center p-0 text-center card-body">
+                                <div class="p-0 text-center card-body">
                                     <div class="tooltip tooltip-left" :data-tip="item.name">
                                         <h2
-                                            class="w-24 p-0 m-0 overflow-hidden text-center card-title whitespace-nowrap text-ellipsis">
+                                            class="p-0 m-0 overflow-hidden text-center card-title whitespace-nowrap text-ellipsis">
                                             {{ item.name }}</h2>
                                     </div>
-                                    <p class="absolute z-40 p-0 m-0 text-gray-300/80 mt-9">{{ item.isUsedCount }}/{{
-                                        item.count }}</p>
+                                    <p class="w-3/4 absolute z-40 p-0 m-0 text-gray-300/80 mt-9">{{ item.isUsedCount
+                                        }}/{{
+                                            item.count }}</p>
                                     <progress class="w-3/4 h-6 progress progress-primary" :value="item.isUsedCount"
-                                        :max="item.count"></progress>
+                                        :max="item.count">
+                                    </progress>
                                     <!-- <p class="p-0 m-0">{{ item.isUsedCount }}/{{ item.count }}</p> -->
                                 </div>
                             </div>
@@ -401,4 +406,5 @@ onMounted(() => {
     100% {
         opacity: 1;
     }
-}</style>
+}
+</style>

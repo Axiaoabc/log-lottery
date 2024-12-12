@@ -23,6 +23,7 @@ export const usePrizeConfig = defineStore('prize', {
                         enable: true,
                         countList: []
                     },
+                    isExclude:false,
                     desc: '',
                     isShow: false,
                     isUsed: false,
@@ -128,6 +129,7 @@ export const usePrizeConfig = defineStore('prize', {
                     enable: true,
                     countList: []
                 },
+                isExclude:false,
                 desc: '',
                 isShow: false,
                 isUsed: false,
@@ -155,6 +157,7 @@ export const usePrizeConfig = defineStore('prize', {
                         enable: true,
                         countList: []
                     },
+                    isExclude:false,
                     desc: '',
                     isShow: false,
                     isUsed: false,
