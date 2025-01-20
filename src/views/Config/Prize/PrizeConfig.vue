@@ -36,6 +36,7 @@ const addPrize = () => {
             enable: false,
             countList: []
         },
+        isExclude:true,
         desc: '',
         isUsed: false,
         isShow: true,

@@ -69,7 +69,7 @@ const skip = (path: string) => {
         <nav>
             <a class="cursor-pointer link link-hover text-inherit" target="_blank" href="https://24years.top">破山中贼易，破心中贼难</a>
         </nav>
-        <nav>
+        <!-- <nav>
             <div class="grid grid-flow-col gap-4">
                 <a href="https://github.com/LOG1997/log-lottery" target="_blank" class="cursor-pointer text-inherit">
                     <svg-icon name="github"></svg-icon>
@@ -79,12 +79,12 @@ const skip = (path: string) => {
                     <svg-icon name="instagram"></svg-icon>
                 </a>
             </div>
-        </nav>
-        <aside>
+        </nav> -->
+        <!-- <aside>
 
             <p class="p-0 m-0">蜀ICP备2021028666号</p>
             <p>Copyright © 2024 - All right reserved by Log1997</p>
-        </aside>
+        </aside> -->
     </footer>
 </template>
 

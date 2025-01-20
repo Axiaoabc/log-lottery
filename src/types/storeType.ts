@@ -34,6 +34,7 @@ export interface IPrizeConfig {
         enable: boolean,
         countList: Separate[],
     };
+    isExclude: boolean;
     desc: string;
     isShow: boolean;
     isUsed: boolean,

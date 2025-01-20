@@ -1,18 +1,23 @@
 import { rgba } from '@/utils/color'
 import { IPersonConfig } from '@/types/storeType'
 
-export const useElementStyle = (element: any, person: IPersonConfig, index: number, patternList: number[], patternColor: string, cardColor: string, cardSize: { width: number, height: number }, textSize: number, mod: 'default' | 'lucky'|'sphere' = 'default') => {
-    if (patternList.includes(index+1)&&mod=='default') {
+export const useElementStyle = (element: any, person: IPersonConfig, index: number, patternList: number[], patternColor: string, cardColor: string, cardSize: { width: number, height: number }, textSize: number, mod: 'default' | 'lucky' | 'sphere' = 'default') => {
+    if (patternList.includes(index + 1) && mod == 'default') {
         element.style.backgroundColor = rgba(patternColor, Math.random() * 0.2 + 0.8)
+        element.style.border = `1px solid ${rgba(patternColor, 0.25)}`
+        element.style.boxShadow = `0 0 12px ${rgba(patternColor, 0.5)}`
     }
-    else if(mod=='sphere'||mod=='default') {
+    else if (mod == 'sphere' || mod == 'default') {
         element.style.backgroundColor = rgba(cardColor, Math.random() * 0.5 + 0.25)
+        element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
+        element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     }
-    else if(mod=='lucky'){
+    else if (mod == 'lucky') {
         element.style.backgroundColor = rgba(cardColor, 0.8)
+        element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
+        element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     }
-    element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
-    element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
+
     element.style.width = `${cardSize.width}px`;
     element.style.height = `${cardSize.height}px`;
     if (mod == 'lucky') {
@@ -24,13 +29,13 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
     // 等比放大
     element.addEventListener('mouseenter', (ev: MouseEvent) => {
         const target = ev.target as HTMLElement
-        target.style.border = `1px solid ${rgba(cardColor, 0.75)}`
-        target.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.75)}`
+        // target.style.border = `1px solid ${rgba(cardColor, 0.75)}`
+        // target.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.75)}`
     })
     element.addEventListener('mouseleave', (ev: MouseEvent) => {
         const target = ev.target as HTMLElement
-        target.style.border = `1px solid ${rgba(cardColor, 0.25)}`
-        target.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
+        // target.style.border = `1px solid ${rgba(cardColor, 0.25)}`
+        // target.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     })
     element.children[0].style.fontSize = textSize * 0.5 + 'px';
     if (person.uid) {
@@ -39,7 +44,7 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
 
     element.children[1].style.fontSize = textSize + 'px'
     element.children[1].style.lineHeight = textSize * 3 + 'px'
-    element.children[1].style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
+    // element.children[1].style.textShadow = `0 0 12px ${rgba(cardColor, 0.95)}`
     if (person.name) {
         element.children[1].textContent = person.name
     }
@@ -70,21 +75,23 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
 //     return element
 // }
 
-export const useElementPosition = (element: any, count: number, cardSize: { width: number, height: number }, windowSize: { width: number, height: number }, cardIndex: number) => {
+export const useElementPosition = (element: any, count: number, cardSize: { width: number, height: number }, windowSize: { width: number, height: number }, cardIndex: number, currentSize = 2) => {
     let xTable = 0
     let yTable = 0
+    let mul = currentSize == 2 ? 1 : 2
+
     const centerPosition = {
         x: 0,
-        y: windowSize.height / 2 - cardSize.height / 2
+        y: windowSize.height / 2 - cardSize.height / (mul*2)
     }
     const index = cardIndex % 5
     if (index == 0) {
         xTable = centerPosition.x
-        yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + 60)
+        yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + (60 / mul))
     }
     else {
-        xTable = index % 2 === 0 ? Math.ceil(index / 2) * (cardSize.width + 100) : -Math.ceil(index / 2) * (cardSize.width + 100)
-        yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + 60)
+        xTable = index % 2 === 0 ? Math.ceil(index / 2) * (cardSize.width + (100 / mul)) : -Math.ceil(index / 2) * (cardSize.width + (100 / mul))
+        yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + (60 / mul))
     }
 
     return { xTable, yTable }

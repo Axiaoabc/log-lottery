@@ -212,7 +212,7 @@ onMounted(() => {
                     <ul class="flex flex-col-reverse gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
-                            <div class="relative flex flex-row items-center justify-between w-64 h-20 shadow-xl card bg-base-100"
+                            <div class="relative flex flex-row items-center justify-between w-72 h-20 shadow-xl card bg-base-100"
                                 v-if="item.isShow">
                                 <div v-if="item.isUsed"
                                     class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
@@ -264,6 +264,8 @@ onMounted(() => {
                 </div>
             </div>
         </transition>
+
+        
     </div>
 </template>
 
@@ -325,6 +327,7 @@ onMounted(() => {
     border-bottom-right-radius: 20px;
     z-index: -1;
 }
+
 
 @keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
     to {

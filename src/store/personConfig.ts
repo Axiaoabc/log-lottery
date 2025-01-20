@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { IPersonConfig } from '@/types/storeType';
 import { IPrizeConfig } from '@/types/storeType';
-import { defaultPersonList, excludedUserIds } from './data'
+import { defaultPersonList } from './data'
 import { usePrizeConfig } from './prizeConfig';
 import dayjs from 'dayjs'
 export const usePersonConfig = defineStore('person', {
@@ -10,7 +10,6 @@ export const usePersonConfig = defineStore('person', {
             personConfig: {
                 allPersonList: [] as IPersonConfig[],
                 alreadyPersonList: [] as IPersonConfig[],
-                excludedUserIds: [...excludedUserIds],
             }
         };
     },
@@ -24,10 +23,6 @@ export const usePersonConfig = defineStore('person', {
             return state.personConfig.allPersonList.filter((item: IPersonConfig) => {
                 return item
             });
-        },
-        // 获取已排除人员名单
-        getExcludedUserIds(state) {
-            return state.personConfig.excludedUserIds;
         },
         // 获取未获此奖的人员名单
         getNotThisPrizePersonList(state: any) {
@@ -141,14 +136,12 @@ export const usePersonConfig = defineStore('person', {
         setDefaultPersonList() {
             this.personConfig.allPersonList = defaultPersonList;
             this.personConfig.alreadyPersonList = [];
-            this.personConfig.excludedUserIds = excludedUserIds;
         },
         // 重置所有配置
         reset() {
             this.personConfig = {
                 allPersonList: [] as IPersonConfig[],
                 alreadyPersonList: [] as IPersonConfig[],
-                excludedUserIds: [...excludedUserIds],
             }
         },
 

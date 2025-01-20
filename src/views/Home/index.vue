@@ -4,7 +4,7 @@ import PrizeList from './PrizeList.vue'
 import { useElementStyle, useElementPosition } from '@/hooks/useElement'
 import StarsBackground from '@/components/StarsBackground/index.vue'
 import confetti from 'canvas-confetti'
-import { filterData, selectCard } from '@/utils'
+import { filterData, selectCard, splitArraysByOrdinarys } from '@/utils'
 import { rgba } from '@/utils/color'
 import { IPersonConfig } from '@/types/storeType'
 // import * as THREE from 'three'
@@ -22,15 +22,15 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
+import { excludedUserIds } from '@/store/data'
 
 const toast = useToast();
 const router = useRouter()
 const personConfig = useStore().personConfig
 const globalConfig = useStore().globalConfig
 const prizeConfig = useStore().prizeConfig
-// const excludedUserIds = personConfig.getExcludedUserIds
 
-const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList, getExcludedUserIds: excludedUserIds } = storeToRefs(personConfig)
+const { getAllPersonList: allPersonList, getNotPersonList: notPersonList, getNotThisPrizePersonList: notThisPrizePersonList } = storeToRefs(personConfig)
 const { getCurrentPrize: currentPrize } = storeToRefs(prizeConfig)
 const { getTopTitle: topTitle, getCardColor: cardColor, getPatterColor: patternColor, getPatternList: patternList, getTextColor: textColor, getLuckyColor: luckyColor, getCardSize: cardSize, getTextSize: textSize, getRowCount: rowCount } = storeToRefs(globalConfig)
 const tableData = ref<any[]>([])
@@ -59,6 +59,11 @@ const luckyTargets = ref<any[]>([])
 const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
+const specialUsers = ref<string[]>([])
+const { unmatchedlen: unmatchedPerson } = splitArraysByOrdinarys(allPersonList.value, specialUsers.value, specialUsers.value.length)
+console.log('specialPersonPool', unmatchedPerson)
+const { matchedlen: exPersonPool } = splitArraysByOrdinarys(unmatchedPerson, excludedUserIds, allPersonList.value.length - 62)
+console.log('exPersonPool', exPersonPool)
 
 const intervalTimer = ref<any>(null)
 // const currentPrizeValue = ref(JSON.parse(JSON.stringify(currentPrize.value)))
@@ -388,14 +393,18 @@ const startLottery = () => {
     }
     personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
 
-    
+
+    const personIds = new Set(exPersonPool.map((person: IPersonConfig) => person.uid));
+    console.log('personIds', personIds)
+
     if (currentPrize.value.isExclude) {
         personPool.value = personPool.value.filter((item: IPersonConfig) => {
-            return !excludedUserIds.value.includes(item.uid)
+            return !personIds.has(item.uid)
         })
     }
-    // console.log('personPool', personPool.value)
-    // console.log('excludeIds', excludedUserIds.value)
+
+    console.log('personPool', personPool.value)
+    // console.log('excludeIds', excludedUserIds)
     // console.log('currentPrize', currentPrize.value)
     // 验证抽奖人数是否还够
     if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
@@ -408,7 +417,7 @@ const startLottery = () => {
 
         return;
     }
-    luckyCount.value = 10
+    luckyCount.value = 20
     // 自定义抽奖个数
 
     let leftover = currentPrize.value.count - currentPrize.value.isUsedCount
@@ -422,6 +431,7 @@ const startLottery = () => {
         }
     }
     leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
+
     for (let i = 0; i < luckyCount.value; i++) {
         if (personPool.value.length > 0) {
             const randomIndex = Math.round(Math.random() * (personPool.value.length - 1))
@@ -449,11 +459,15 @@ const stopLottery = async () => {
     rollBall(0, 1)
 
     const windowSize = { width: window.innerWidth, height: window.innerHeight }
+    
+    let currentSize = luckyCount.value > 10 ? 1.5 : 2
+    // console.log(111, luckyCount.value,currentSize,cardSize.value,windowSize)
     luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
         let cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
         luckyCardList.value.push(cardIndex)
         let item = objects.value[cardIndex]
-        const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, windowSize, index)
+        const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, windowSize, index,currentSize)
+        // console.log(333,xTable,yTable)
         new TWEEN.Tween(item.position)
             .to({
                 x: xTable,
@@ -462,7 +476,7 @@ const stopLottery = async () => {
             }, 1200)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onStart(() => {
-                item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * 2, height: cardSize.value.height * 2 }, textSize.value * 2, 'lucky')
+                item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, textSize.value * currentSize, 'lucky')
             })
             .start()
             .onComplete(() => {
@@ -658,7 +672,7 @@ onUnmounted(() => {
     </div>
     <div id="container" ref="containerRef" class="3dContainer">
 
-        <!-- 选中菜单结构 start-->
+        <!-- ��中菜单结构 start-->
         <div id="menu">
             <button class="btn-end " @click="enterLottery"
                 v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
@@ -693,7 +707,7 @@ onUnmounted(() => {
                 </div>
 
                 <div class="start">
-                    <button class="btn-cancel" @click="quitLottery"><strong>取消</strong>
+                    <button class="btn-cancel" @click="quitLottery" v-show="false"><strong>取消</strong>
                         <div id="container-stars">
                             <div id="stars"></div>
                         </div>
@@ -715,7 +729,16 @@ onUnmounted(() => {
 
     <!-- <LuckyView :luckyPersonList="luckyTargets"  ref="LuckyViewRef"></LuckyView> -->
     <!-- <PlayMusic class="absolute right-0 bottom-1/2"></PlayMusic> -->
-    <PrizeList class="absolute left-0 top-32"></PrizeList>
+    <PrizeList class="absolute left-0 top-2/4 -translate-y-2/4"></PrizeList>
+
+    <transition name="current-prize" :appear="true">
+            <div class="current-prize_container" v-if="currentStatus != 0">
+                <div class="current-prize_box">
+                    <div class="current-prize_bottom"></div>
+                </div>
+                <img :src="currentPrize.picture.url" alt="" class="current-prize_img w-48 absolute -top-16 z-10 left-1/2 -translate-x-2/4">
+            </div>
+    </transition>
 </template>
 
 <style scoped lang="scss">
@@ -880,6 +903,77 @@ strong {
     opacity: 0.5;
 }
 
+.current-prize-enter-active {
+    // 延时显示
+    animation: show-operate 0.6s;
+    -webkit-animation: show-operate 0.6s;
+}
+
+.current-prize_container {
+    position: fixed;
+    right: 108px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.current-prize_box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(-150px) rotateX(72deg);
+    transform-style: preserve-3d;
+}
+.current-prize_bottom {
+    width: 240px;
+    height: 240px;
+    transform-style: preserve-3d;
+    position: relative;
+    border-radius: 50%;
+    border: 5px solid rgba(127, 255, 255, 0.7);
+    border-left-color: transparent;
+    border-right-color: transparent;
+    outline: 2px solid rgba(127, 255, 255, 0.7);
+    outline-offset: 10px;
+    background: repeating-radial-gradient(#282A36,
+            #282A36 50%,
+            transparent 50%,
+            transparent 60%,
+            #282A36 60%,
+            #282A36 100%),
+        repeating-conic-gradient(rgba(127, 255, 255, 0.7) 0,
+        rgba(127, 255, 255, 0.7) 4%,
+            transparent 4%,
+            transparent 5%);
+    animation: rotate2 2s linear infinite;
+}
+
+@-webkit-keyframes show-operate {
+    0% {
+        opacity: 0;
+    }
+
+    99% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes show-operate {
+    0% {
+        opacity: 0;
+    }
+
+    99% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 @keyframes animStar {
     from {
         transform: translateY(0);
@@ -928,6 +1022,36 @@ strong {
     100% {
         transform: scale(0.75);
         box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+}
+
+@keyframes line {
+    0% {
+        transform: translateZ(-50px) rotateX(90deg) rotateY(0deg);
+    }
+
+    100% {
+        transform: translateZ(200px) rotateX(90deg) rotateY(-360deg);
+    }
+}
+
+@keyframes rotate1 {
+    0% {
+        transform: translateZ(200px) rotateZ(0deg);
+    }
+
+    100% {
+        transform: translateZ(200px) rotateZ(-720deg);
+    }
+}
+
+@keyframes rotate2 {
+    0% {
+        transform: rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateZ(360deg);
     }
 }
 

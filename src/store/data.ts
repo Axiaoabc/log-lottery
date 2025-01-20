@@ -1,4 +1,14 @@
 import { IPrizeConfig, IPersonConfig } from '@/types/storeType';
+
+import defaultImage from '@/assets/images/hongbao.png'
+import prize0 from '@/assets/images/prize0.png'
+import prize1 from '@/assets/images/prize1.png'
+import prize2 from '@/assets/images/prize2.png'
+import prize3 from '@/assets/images/prize3.png'
+import prize4 from '@/assets/images/prize4.png'
+import prize5 from '@/assets/images/prize5.png'
+import prize6 from '@/assets/images/prize6.png'
+
 export const defaultPersonList = <IPersonConfig[]>
     [
         { uid: 'U100156001', name: '朱厚熜', department: '皇室', identity: '万岁爷', x: 1, y: 1, id: 0, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156002', name: '朱载垕', department: '皇室', identity: '裕王', x: 2, y: 1, id: 1, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156003', name: '朱翊钧 ', department: '皇室', identity: '裕王世子', x: 3, y: 1, id: 2, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156004', name: '严嵩', department: '内阁', identity: '首辅', x: 4, y: 1, id: 3, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156005', name: '徐阶', department: '内阁', identity: '次辅、户部尚书', x: 5, y: 1, id: 4, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156006', name: '张居正', department: '内阁', identity: '阁臣、兵部侍郞', x: 6, y: 1, id: 5, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156007', name: '高拱', department: '内阁', identity: '阁臣、户部侍郞', x: 7, y: 1, id: 6, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156008', name: '严世蕃', department: '内阁', identity: '吏部侍郞', x: 8, y: 1, id: 7, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156009', name: '胡宗宪', department: '大臣', identity: '浙直总督', x: 9, y: 1, id: 8, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156010', name: '戚继光', department: '大臣', identity: '都督佥事', x: 10, y: 1, id: 9, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156011', name: '高瀚文', department: '大臣', identity: '杭州知府', x: 11, y: 1, id: 10, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156012', name: '赵贞吉', department: '大臣', identity: '江苏巡抚', x: 12, y: 1, id: 11, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156013', name: '海瑞', department: '大臣', identity: '淳安知县', x: 13, y: 1, id: 12, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156014', name: '何茂才', department: '大臣', identity: '浙江布政使兼按察使', x: 14, y: 1, id: 13, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156015', name: '郑泌昌', department: '大臣', identity: '浙江巡抚', x: 15, y: 1, id: 14, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156016', name: '王用汲', department: '大臣', identity: '建德知县', x: 16, y: 1, id: 15, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156017', name: '谭纶', department: '大臣', identity: '浙直总督府参军', x: 17, y: 1, id: 16, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156018', name: '朱七', department: '大臣', identity: '北镇抚司', x: 1, y: 2, id: 17, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156019', name: '罗龙文', department: '大臣', identity: '通政使司通政使', x: 2, y: 2, id: 18, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156020', name: '马宁远', department: '大臣', identity: '杭州知府', x: 3, y: 2, id: 19, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156021', name: '田有禄 ', department: '大臣', identity: '淳安县丞', x: 4, y: 2, id: 20, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156022', name: '周云逸', department: '大臣', identity: '钦天监监正', x: 5, y: 2, id: 21, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156023', name: '蒋千户', department: '大臣', identity: '浙江按察使司', x: 6, y: 2, id: 22, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156024', name: '徐千户', department: '大臣', identity: '浙江按察使司', x: 7, y: 2, id: 23, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156025', name: '王牢头 ', department: '大臣', identity: '牢头', x: 8, y: 2, id: 24, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156026', name: '赵班头', department: '大臣', identity: '班头', x: 9, y: 2, id: 25, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156027', name: '吕芳', department: '太监', identity: '掌印太监', x: 10, y: 2, id: 26, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156028', name: '杨金水', department: '太监', identity: '织造局', x: 11, y: 2, id: 27, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156029', name: '陈洪', department: '太监', identity: '首席秉笔太监', x: 12, y: 2, id: 28, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156030', name: '黄锦', department: '太监', identity: '秉笔太监', x: 13, y: 2, id: 29, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156031', name: '李玄', department: '太监', identity: '新安江河道监管', x: 14, y: 2, id: 30, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156032', name: '冯保', department: '太监', identity: '世子大伴', x: 15, y: 2, id: 31, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156033', name: '李时珍', department: '江湖', identity: '名医', x: 16, y: 2, id: 32, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156034', name: '沈一石 ', department: '江湖', identity: '商人', x: 17, y: 2, id: 33, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156035', name: '井上十四郎', department: '江湖', identity: '倭寇', x: 1, y: 3, id: 34, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }, { uid: 'U100156036', name: '芸娘', department: '江湖', x: 2, y: 3, id: 35, isWin: false, createTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', updateTime: 'Tue Jan 09 2024 23:20:07 GMT+0800 (China Standard Time)', prizeName: [], prizeTime: [], prizeId: [] }]
@@ -64,244 +74,178 @@ export const defaultMusicList = [
 export const defaultPrizeList = <IPrizeConfig[]>[
     {
         id: '001',
-        name: '六等奖-吹风机',
+        name: '六等奖-小飞匠',
         sort: 1,
         isAll: false,
-        count: 10,
+        count: 20,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '六等奖-吹风机',
-            url: ''
+            id: '6',
+            name: '六等奖-小飞匠',
+            url: prize6
         },
         separateCount: {
             enable: true,
             countList: []
         },
         isExclude: true,
-        desc: '六等奖-吹风机',
+        desc: '六等奖-小飞匠',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '002',
-        name: '六等奖-颈部按摩仪',
+        name: '五等奖-Mi口袋打印机',
         sort: 2,
         isAll: false,
-        count: 10,
+        count: 15,
         isUsedCount: 0,
         picture: {
-            id: '1',
-            name: '六等奖-颈部按摩仪',
-            url: ''
+            id: '5',
+            name: '五等奖-Mi口袋打印机',
+            url: prize5
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '六等奖-颈部按摩仪',
+        desc: '五等奖-Mi口袋打印机',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '003',
-        name: '五等奖-小米音响',
+        name: '四等奖-蓝牙音响',
         sort: 3,
         isAll: false,
-        count: 8,
+        count: 10,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '五等奖-小米音响',
-            url: ''
+            id: '4',
+            name: '四等奖-蓝牙音响',
+            url: prize4
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '五等奖-小米音响',
+        desc: '四等奖-蓝牙音响',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '004',
-        name: '五等奖-拍立得',
+        name: '三等奖-平衡车',
         sort: 4,
         isAll: false,
-        count: 7,
+        count: 8,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '五等奖-拍立得',
-            url: ''
+            id: '3',
+            name: '三等奖-平衡车',
+            url: prize3
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '五等奖-拍立得',
+        desc: '三等奖-平衡车',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '005',
-        name: '四等奖-海尔迷你冰箱',
+        name: '二等奖-小米平板',
         sort: 5,
         isAll: false,
-        count: 10,
+        count: 5,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '四等奖-海尔迷你冰箱',
-            url: ''
+            id: '2',
+            name: '二等奖-小米平板',
+            url: prize2
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '四等奖-海尔迷你冰箱',
+        desc: '二等奖-小米平板',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '006',
-        name: '三等奖-清空购物车',
+        name: '一等奖-DJI Pocket3',
         sort: 6,
         isAll: false,
-        count: 8,
+        count: 3,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '三等奖-清空购物车',
-            url: ''
+            id: '1',
+            name: '一等奖-DJI Pocket3',
+            url: prize1
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '三等奖-清空购物车',
+        desc: '一等奖-DJI Pocket3',
         isShow: true,
         isUsed: false,
         frequency: 1,
     },
     {
         id: '007',
-        name: '二等奖-按摩椅',
+        name: '特等奖-笔记本电脑',
         sort: 7,
-        isAll: false,
-        count: 2,
-        isUsedCount: 0,
-        picture: {
-            id: '',
-            name: '二等奖-按摩椅',
-            url: ''
-        },
-        separateCount: {
-            enable: false,
-            countList: []
-        },
-        isExclude: true,
-        desc: '二等奖-按摩椅',
-        isShow: true,
-        isUsed: false,
-        frequency: 1,
-    },
-    {
-        id: '008',
-        name: '二等奖-游戏机',
-        sort: 8,
-        isAll: false,
-        count: 3,
-        isUsedCount: 0,
-        picture: {
-            id: '',
-            name: '二等奖-游戏机',
-            url: ''
-        },
-        separateCount: {
-            enable: false,
-            countList: []
-        },
-        isExclude: true,
-        desc: '二等奖-游戏机',
-        isShow: true,
-        isUsed: false,
-        frequency: 1,
-    },
-    {
-        id: '009',
-        name: '一等奖-电动车',
-        sort: 9,
-        isAll: false,
-        count: 3,
-        isUsedCount: 0,
-        picture: {
-            id: '',
-            name: '一等奖-电动车',
-            url: ''
-        },
-        separateCount: {
-            enable: false,
-            countList: []
-        },
-        isExclude: true,
-        desc: '一等奖-电动车',
-        isShow: true,
-        isUsed: false,
-        frequency: 1,
-    },
-    {
-        id: '010',
-        name: '特等奖-豪华全家游',
-        sort: 10,
         isAll: false,
         count: 1,
         isUsedCount: 0,
         picture: {
-            id: '',
-            name: '特等奖-豪华全家游',
-            url: ''
+            id: '0',
+            name: '特等奖-笔记本电脑',
+            url: prize0
         },
         separateCount: {
             enable: false,
             countList: []
         },
         isExclude: true,
-        desc: '特等奖-豪华全家游',
+        desc: '特等奖-笔记本电脑',
         isShow: true,
         isUsed: false,
         frequency: 1,
-    },
+    }
 
 ]
 export const defaultCurrentPrize = <IPrizeConfig>{
     id: '001',
-    name: '三等奖',
+    name: '六等奖',
     sort: 1,
     isAll: false,
     count: 12,
     isUsedCount: 0,
     picture: {
         id: '2',
-        name: '三等奖',
-        url: 'https://24years.top/resource/image/image3.png'
+        name: '六等奖',
+        url: defaultImage
     },
     separateCount: {
         enable: true,
         countList: []
     },
     isExclude: true,
-    desc: '三等奖',
+    desc: '六等奖',
     isShow: true,
     isUsed: false,
     frequency: 1,
@@ -322,7 +266,7 @@ export const defaultTemporaryPrize = <IPrizeConfig>{
         enable: true,
         countList: []
     },
-    isExclude: true,
+    isExclude: false,
     desc: '',
     isShow: false,
     isUsed: false,
@@ -332,31 +276,46 @@ export const defaultTemporaryPrize = <IPrizeConfig>{
 export const defaultImageList = [
     {
         id: '0',
-        name: '一等奖',
-        url: 'https://24years.top/resource/image/image1.png'
+        name: '特等奖',
+        url: prize0
     },
     {
         id: '1',
-        name: '二等奖',
-        url: 'https://24years.top/resource/image/image2.png'
+        name: '一等奖',
+        url: prize1
     },
     {
         id: '2',
-        name: '三等奖',
-        url: 'https://24years.top/resource/image/image3.png'
+        name: '二等奖',
+        url: prize2
     },
     {
         id: '3',
-        name: '超级奖',
-        url: 'https://24years.top/resource/image/image4.png'
+        name: '三等奖',
+        url: prize3
     },
     {
         id: '4',
-        name: '四等奖-海尔迷你冰箱',
-        url: 'https://24years.top/resource/image/image5.png'
+        name: '四等奖',
+        url: prize4
+    },
+    {
+        id: '5',
+        name: '五等奖',
+        url: prize5
+    },
+    {
+        id: '6',
+        name: '六等奖',
+        url: prize6
+    },
+    {
+        id: '7',
+        name: '红包',
+        url: defaultImage
     }
 ]
 export const defaultPatternList = [21, 38, 55, 54, 53, 70, 87, 88, 89, 23, 40, 57, 74, 91, 92, 93, 76, 59, 42, 25, 24, 27, 28, 29, 46, 63, 62, 61, 78, 95, 96, 97, 20, 19, 31, 48, 65, 66, 67, 84, 101, 100, 99, 32, 33]
 
 
-export const excludedUserIds = ['00400', '00401', '00402', '00403', '00404', '00405', '00406', '00407', '00408', '00409', '00410', '00411', '00412', '00413']
+export const excludedUserIds = ['50', '83', '94', '121', '133', '134', '135']
