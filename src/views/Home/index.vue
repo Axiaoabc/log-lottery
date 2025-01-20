@@ -59,11 +59,7 @@ const luckyTargets = ref<any[]>([])
 const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
-const specialUsers = ref<string[]>([])
-const { unmatchedlen: unmatchedPerson } = splitArraysByOrdinarys(allPersonList.value, specialUsers.value, specialUsers.value.length)
-console.log('specialPersonPool', unmatchedPerson)
-const { matchedlen: exPersonPool } = splitArraysByOrdinarys(unmatchedPerson, excludedUserIds, allPersonList.value.length - 62)
-console.log('exPersonPool', exPersonPool)
+
 
 const intervalTimer = ref<any>(null)
 // const currentPrizeValue = ref(JSON.parse(JSON.stringify(currentPrize.value)))
@@ -399,7 +395,7 @@ const startLottery = () => {
 
     if (currentPrize.value.isExclude) {
         personPool.value = personPool.value.filter((item: IPersonConfig) => {
-            return !personIds.has(item.uid)
+            return !excludedUserIds.includes(String(item.uid))
         })
     }
 
