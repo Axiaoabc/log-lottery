@@ -163,7 +163,7 @@ onMounted(() => {
             </div>
         </div>
     </dialog>
-    <div>
+    <div class="w-full overflow-y-auto">
         <h2>全局配置</h2>
         <div class="mb-8">
             <button class="btn btn-sm btn-primary" @click="resetDataDialogRef.showModal()">重置所有数据</button>

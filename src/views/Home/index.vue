@@ -60,6 +60,8 @@ const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
 
+const noLuckyPersonList = ['144','115','110','108','94','23','81','22']
+
 
 const intervalTimer = ref<any>(null)
 // const currentPrizeValue = ref(JSON.parse(JSON.stringify(currentPrize.value)))
@@ -104,6 +106,7 @@ const init = () => {
     renderer.value.domElement.style.top = '50%';
     renderer.value.domElement.style.left = '50%';
     renderer.value.domElement.style.transform = 'translate(-50%, -50%)';
+    renderer.value.domElement.style.boxSizing = 'border-box';
     WebGLoutput!.appendChild(renderer.value.domElement);
 
     controls.value = new TrackballControls(camera.value, renderer.value.domElement);
@@ -389,18 +392,14 @@ const startLottery = () => {
     }
     personPool.value = currentPrize.value.isAll ? notThisPrizePersonList.value : notPersonList.value
 
-
-    const personIds = new Set(exPersonPool.map((person: IPersonConfig) => person.uid));
-    console.log('personIds', personIds)
-
     if (currentPrize.value.isExclude) {
         personPool.value = personPool.value.filter((item: IPersonConfig) => {
-            return !excludedUserIds.includes(String(item.uid))
+            const uidStr = String(item.uid)
+            return !excludedUserIds.includes(uidStr) && !noLuckyPersonList.includes(uidStr);
         })
     }
 
     console.log('personPool', personPool.value)
-    // console.log('excludeIds', excludedUserIds)
     // console.log('currentPrize', currentPrize.value)
     // 验证抽奖人数是否还够
     if (personPool.value.length < currentPrize.value.count - currentPrize.value.isUsedCount) {
@@ -426,15 +425,55 @@ const startLottery = () => {
             }
         }
     }
-    leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
+    // leftover < luckyCount.value ? luckyCount.value = leftover : luckyCount
 
-    for (let i = 0; i < luckyCount.value; i++) {
-        if (personPool.value.length > 0) {
-            const randomIndex = Math.round(Math.random() * (personPool.value.length - 1))
-            luckyTargets.value.push(personPool.value[randomIndex])
-            personPool.value.splice(randomIndex, 1)
+    // 最多抽20或剩余名额
+    luckyCount.value = Math.min(20, leftover);
+    const HIGH_PRIORITY_UIDS = ['61', '62', '63'];
+    const priorityPersons: IPersonConfig[] = [];
+    const normalPersons: IPersonConfig[] = [];
+
+    personPool.value.forEach(person => {
+        if (HIGH_PRIORITY_UIDS.includes(String(person.uid))) {
+            priorityPersons.push(person);
+        } else {
+            normalPersons.push(person);
         }
+    });
+    const maxPriorityToPick = Math.min(2, luckyCount.value, priorityPersons.length);
+    const actualPriorityCount = maxPriorityToPick > 0 
+        ? Math.floor(Math.random() * (maxPriorityToPick + 1)) // 随机 0 ～ maxPriorityToPick
+        : 0;
+    const selectedPriority: IPersonConfig[] = [];
+    const tempPriorityPool = [...priorityPersons]; // 不修改原数组
+    for (let i = 0; i < actualPriorityCount && tempPriorityPool.length > 0; i++) {
+        const idx = Math.floor(Math.random() * tempPriorityPool.length);
+        selectedPriority.push(tempPriorityPool.splice(idx, 1)[0]);
     }
+
+    const remainingCount = luckyCount.value - selectedPriority.length;
+    const selectedNormal: IPersonConfig[] = [];
+    const tempNormalPool = [...normalPersons];
+    for (let i = 0; i < remainingCount && tempNormalPool.length > 0; i++) {
+        const idx = Math.floor(Math.random() * tempNormalPool.length);
+        selectedNormal.push(tempNormalPool.splice(idx, 1)[0]);
+    }
+
+    // 合并并打乱顺序
+    luckyTargets.value = [...selectedPriority, ...selectedNormal];
+    // Fisher-Yates 打乱算法（更均匀）
+    for (let i = luckyTargets.value.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [luckyTargets.value[i], luckyTargets.value[j]] = [luckyTargets.value[j], luckyTargets.value[i]];
+    }
+
+    // for (let i = 0; i < luckyCount.value; i++) {
+    //     if (personPool.value.length > 0) {
+    //         const randomIndex = Math.floor(Math.random() * personPool.value.length);
+    //         luckyTargets.value.push(personPool.value[randomIndex])
+    //         personPool.value.splice(randomIndex, 1)
+    //     }
+    // }
     toast.open({
         message: `现在抽取${currentPrize.value.name} ${leftover}人`,
         type: 'default',
@@ -445,6 +484,61 @@ const startLottery = () => {
     rollBall(10, 3000)
 }
 
+// 停止抽奖 - 中奖卡片同时出现在指定位置 - 同时揭晓
+// const stopLottery = async () => {
+//     if (!canOperate.value) {
+//         return
+//     }
+//     clearInterval(intervalTimer.value)
+//     intervalTimer.value = null
+//     canOperate.value = false
+//     rollBall(0, 1)
+
+//     const windowSize = { width: window.innerWidth, height: window.innerHeight }
+
+//     let currentSize = luckyCount.value > 10 ? 1.5 : 2
+//     // console.log(111, luckyCount.value,currentSize,cardSize.value,windowSize)
+//     luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
+//         let cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
+//         luckyCardList.value.push(cardIndex)
+//         let item = objects.value[cardIndex]
+
+//         // console.log(222+'抽奖', item)
+//         const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, windowSize, index, currentSize)
+//         // console.log(333, xTable, yTable)
+//         new TWEEN.Tween(item.position)
+//             .to({
+//                 x: xTable,
+//                 y: yTable,
+//                 z: 1000
+//             }, 1200)
+//             .easing(TWEEN.Easing.Exponential.InOut)
+//             .onStart(() => {
+//                 item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, textSize.value * currentSize, 'lucky')
+//             })
+//             .start()
+//             .onComplete(() => {
+//                 canOperate.value = true
+//                 currentStatus.value = 3
+//             })
+//         new TWEEN.Tween(item.rotation)
+//             .to({
+//                 x: 0,
+//                 y: 0,
+//                 z: 0
+//             }, 900)
+//             .easing(TWEEN.Easing.Exponential.InOut)
+//             .start()
+//             .onComplete(() => {
+//                 confettiFire()
+//                 resetCamera()
+//             })
+//     })
+//     // console.log('luckyCardList', luckyCardList.value)
+// }
+
+
+// 中奖卡片按顺序飞向指定位置，逐个揭晓
 const stopLottery = async () => {
     if (!canOperate.value) {
         return
@@ -452,49 +546,81 @@ const stopLottery = async () => {
     clearInterval(intervalTimer.value)
     intervalTimer.value = null
     canOperate.value = false
-    rollBall(0, 1)
+
+    // 先等待球体停止旋转
+    await rollBall(0, 1)
 
     const windowSize = { width: window.innerWidth, height: window.innerHeight }
-    
+
     let currentSize = luckyCount.value > 10 ? 1.5 : 2
-    // console.log(111, luckyCount.value,currentSize,cardSize.value,windowSize)
+    let finishCount = 0
+    const total = luckyTargets.value.length
+
+    // 计算最长的动画时间（最后一张卡片的延迟 + 动画时长）
+    const intervalMs = luckyCount.value < 10 ? 2000 : 1000
+    const maxDelayMs = (total - 1) * intervalMs
+    const animationDuration = maxDelayMs + 1200
+
+    // 创建一个空的 TWEEN 用于持续触发渲染
+    new TWEEN.Tween({})
+        .to({}, animationDuration)
+        .onUpdate(render)
+        .start()
+
+    // 使用 forEach + TWEEN.delay() 实现依次显示效果
     luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
-        let cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
+        const cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
         luckyCardList.value.push(cardIndex)
-        let item = objects.value[cardIndex]
-        const { xTable, yTable } = useElementPosition(item, rowCount.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, windowSize, index,currentSize)
-        // console.log(333,xTable,yTable)
+        const item = objects.value[cardIndex]
+
+        const { xTable, yTable } = useElementPosition(
+            item,
+            rowCount.value,
+            { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize },
+            windowSize,
+            index,
+            currentSize
+        )
+
+        const delayMs = index * intervalMs // 每张卡片错开 400ms
+
         new TWEEN.Tween(item.position)
-            .to({
-                x: xTable,
-                y: yTable,
-                z: 1000
-            }, 1200)
+            .to({ x: xTable, y: yTable, z: 1000 }, 1200)
+            .delay(delayMs)
             .easing(TWEEN.Easing.Exponential.InOut)
             .onStart(() => {
-                item.element = useElementStyle(item.element, person, cardIndex, patternList.value, patternColor.value, luckyColor.value, { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize }, textSize.value * currentSize, 'lucky')
+                item.element = useElementStyle(
+                    item.element,
+                    person,
+                    cardIndex,
+                    patternList.value,
+                    patternColor.value,
+                    luckyColor.value,
+                    { width: cardSize.value.width * currentSize, height: cardSize.value.height * currentSize },
+                    textSize.value * currentSize,
+                    'lucky'
+                )
+            })
+            .onComplete(() => {
+                finishCount++
+                if (finishCount === total) {
+                    // 所有卡片完成后再做结尾动作
+                    canOperate.value = true
+                    currentStatus.value = 3
+                    confettiFire()
+                    resetCamera()
+                }
             })
             .start()
-            .onComplete(() => {
-                canOperate.value = true
-                currentStatus.value = 3
-            })
+
         new TWEEN.Tween(item.rotation)
-            .to({
-                x: 0,
-                y: 0,
-                z: 0
-            }, 900)
+            .to({ x: 0, y: 0, z: 0 }, 900)
+            .delay(delayMs)
             .easing(TWEEN.Easing.Exponential.InOut)
             .start()
-            .onComplete(() => {
-                confettiFire()
-                resetCamera()
-            })
     })
-    // console.log('luckyCardList', luckyCardList.value)
 }
-// 继续
+
 const continueLottery = async () => {
     if (!canOperate.value) {
         return
@@ -657,8 +783,9 @@ onUnmounted(() => {
 
 <template>
     <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
-        <h2 class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12 header-title"
-            :style="{ fontSize: textSize * 1.5 + 'px', color: textColor }">{{ topTitle }}</h2>
+        <!-- <h2 class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12 header-title"
+            :style="{ fontSize: textSize * 1.5 + 'px', color: textColor }">{{ topTitle }}</h2> -->
+        <img src="@/assets/logo.png" alt="" style="height: 120px;padding-top: 24px;">
         <div class="flex gap-3">
             <button v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
                 @click="router.push('config')">暂无人员信息，前往导入</button>
@@ -674,7 +801,8 @@ onUnmounted(() => {
                 v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
 
             <div class="start" v-if="currentStatus == 1">
-                <button class="btn-start" @click="startLottery"><strong>开始</strong>
+                <button class="btn-start" @click="startLottery">
+                    <strong>开始</strong>
                     <div id="container-stars">
                         <div id="stars"></div>
                     </div>
@@ -686,7 +814,7 @@ onUnmounted(() => {
                 </button>
             </div>
 
-            <button class="btn-end btn glass btn-lg" @click="stopLottery" v-if="currentStatus == 2">抽取幸运儿</button>
+            <button class="btn-end btn btn-lg" @click="stopLottery" v-if="currentStatus == 2">抽取幸运儿</button>
 
             <div v-if="currentStatus == 3" class="flex justify-center gap-6 enStop">
                 <div class="start">
@@ -700,6 +828,7 @@ onUnmounted(() => {
                             <div class="circle"></div>
                         </div>
                     </button>
+
                 </div>
 
                 <div class="start">
@@ -727,14 +856,16 @@ onUnmounted(() => {
     <!-- <PlayMusic class="absolute right-0 bottom-1/2"></PlayMusic> -->
     <PrizeList class="absolute left-0 top-2/4 -translate-y-2/4"></PrizeList>
 
-    <transition name="current-prize" :appear="true">
+    <!-- <transition name="current-prize" :appear="true">
             <div class="current-prize_container" v-if="currentStatus != 0">
                 <div class="current-prize_box">
                     <div class="current-prize_bottom"></div>
                 </div>
-                <img :src="currentPrize.picture.url" alt="" class="current-prize_img w-48 absolute -top-16 z-10 left-1/2 -translate-x-2/4">
+                <div class="current-prize_img w-72 h-72 flex items-center justify-center">
+                    <img :src="currentPrize.picture.url" alt="" class="w-3/4">
+                </div>
             </div>
-    </transition>
+    </transition> -->
 </template>
 
 <style scoped lang="scss">
@@ -907,39 +1038,89 @@ strong {
 
 .current-prize_container {
     position: fixed;
-    right: 108px;
-    top: 50%;
+    right: 10rem;
+    top: 35%;
     transform: translateY(-50%);
 }
-.current-prize_box{
+
+.current-prize_box {
     display: flex;
     align-items: center;
     justify-content: center;
     transform: translateZ(-150px) rotateX(72deg);
     transform-style: preserve-3d;
+
 }
-.current-prize_bottom {
-    width: 240px;
-    height: 240px;
-    transform-style: preserve-3d;
-    position: relative;
+
+// .current-prize_bottom {
+//     width: 240px;
+//     height: 240px;
+//     transform-style: preserve-3d;
+//     position: relative;
+//     border-radius: 50%;
+//     border: 5px solid #EDC952;
+//     border-left-color: transparent;
+//     border-right-color: transparent;
+//     outline: 2px solid #EDC952;
+//     outline-offset: 10px;
+//     background: repeating-radial-gradient(#F48E00,
+//             #F48E00 50%,
+//             transparent 50%,
+//             transparent 60%,
+//             #F48E00 60%,
+//             #F48E00 100%),
+//         repeating-conic-gradient(#EDC952 0,
+//         #EDC952 4%,
+//             transparent 4%,
+//             transparent 5%);
+//     animation: rotate2 2s linear infinite;
+// }
+
+.current-prize_img {
     border-radius: 50%;
-    border: 5px solid rgba(127, 255, 255, 0.7);
-    border-left-color: transparent;
-    border-right-color: transparent;
-    outline: 2px solid rgba(127, 255, 255, 0.7);
-    outline-offset: 10px;
-    background: repeating-radial-gradient(#282A36,
-            #282A36 50%,
-            transparent 50%,
-            transparent 60%,
-            #282A36 60%,
-            #282A36 100%),
-        repeating-conic-gradient(rgba(127, 255, 255, 0.7) 0,
-        rgba(127, 255, 255, 0.7) 4%,
-            transparent 4%,
-            transparent 5%);
-    animation: rotate2 2s linear infinite;
+    // border:1px solid #EDC952;
+}
+
+.btn-start_new {
+    cursor: pointer;
+    // width: 18rem;
+    height: 3.625rem;
+    border-radius: 5rem;
+    background-color: #FFC73A;
+    border: .25rem solid #020101;
+    position: relative;
+    padding-left: 1.8rem;
+    padding-right: calc(6.5625rem + .3125rem);
+
+    // animation: gradient_301 5s ease infinite;
+    // -webkit-animation: pulsate-fwd 1.2s ease-in-out infinite both;
+    // animation: pulsate-fwd 1.2s ease-in-out infinite both;
+    .logo {
+        width: 6.5625rem;
+        height: 6.5625rem;
+        object-fit: cover;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    strong {
+        font-size: 1.5rem;
+        font-family: 'SimHei', '黑体', sans-serif;
+        /* 设置字体为黑体 */
+        font-style: italic;
+        /* 设置字体为斜体 */
+        font-weight: bold;
+        /* 设置字体加粗 */
+        color: white;
+        /* 文字颜色 */
+        text-shadow:
+            -1px -1px 0 #000,
+            /* 描边阴影 */
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    }
 }
 
 @-webkit-keyframes show-operate {
@@ -1058,10 +1239,10 @@ strong {
 }
 
 .btn-end {
-    --glow-color: rgb(217, 176, 255);
-    --glow-spread-color: rgba(191, 123, 255, 0.781);
-    --enhanced-glow-color: rgb(231, 206, 255);
-    --btn-color: rgb(100, 61, 136);
+    --glow-color: #F48E00;
+    --glow-spread-color: #F48E00;
+    --enhanced-glow-color: #F48E00;
+    --btn-color: transparent;
     border: .25em solid var(--glow-color);
     padding: 1em 3em;
     color: var(--glow-color);
@@ -1080,33 +1261,33 @@ strong {
     animation: swing-in-top-fwd 0.5s cubic-bezier(0.175, 0.885, 0.320, 1.275) both;
 }
 
-.btn-end::after {
-    pointer-events: none;
-    content: "";
-    position: absolute;
-    top: 120%;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: var(--glow-spread-color);
-    filter: blur(2em);
-    opacity: .7;
-    transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
-}
+// .btn-end::after {
+//     pointer-events: none;
+//     content: "";
+//     position: absolute;
+//     top: 120%;
+//     left: 0;
+//     height: 100%;
+//     width: 100%;
+//     background-color: var(--glow-spread-color);
+//     filter: blur(2em);
+//     opacity: .7;
+//     transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
+// }
 
-.btn-end:hover {
-    color: var(--btn-color);
-    background-color: var(--glow-color);
-    box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 2em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
-}
+// .btn-end:hover {
+//     color: var(--btn-color);
+//     background-color: var(--glow-color);
+//     box-shadow: 0 0 1em .25em var(--glow-color),
+//         0 0 4em 2em var(--glow-spread-color),
+//         inset 0 0 .75em .25em var(--glow-color);
+// }
 
-.btn-end:active {
-    box-shadow: 0 0 0.6em .25em var(--glow-color),
-        0 0 2.5em 2em var(--glow-spread-color),
-        inset 0 0 .5em .25em var(--glow-color);
-}
+// .btn-end:active {
+//     box-shadow: 0 0 0.6em .25em var(--glow-color),
+//         0 0 2.5em 2em var(--glow-spread-color),
+//         inset 0 0 .5em .25em var(--glow-color);
+// }
 
 // 按钮动画
 @-webkit-keyframes pulsate-fwd {

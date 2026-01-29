@@ -154,7 +154,7 @@ onMounted(() => {
             </div>
         </div>
     </dialog>
-    <div class="min-w-1000px">
+    <div class="min-w-1000px overflow-y-auto">
 
         <h2>人员管理</h2>
         <div class="flex gap-3">

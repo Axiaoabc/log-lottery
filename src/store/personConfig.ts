@@ -145,6 +145,30 @@ export const usePersonConfig = defineStore('person', {
             }
         },
 
+        // 增量添加
+        addNewPersonList(newPersons: IPersonConfig[]) {
+            if (!newPersons || newPersons.length === 0) return;
+
+            const existingIds = new Set(this.personConfig.allPersonList.map(p => p.id));
+
+            const uniqueNewPersons = newPersons.filter(person => {
+                // 只添加 ID 不存在的人员
+                return !existingIds.has(person.id);
+            });
+
+            if (uniqueNewPersons.length > 0) {
+                // 默认设置为未中奖（isWin = false）
+                uniqueNewPersons.forEach(p => {
+                    if (p.isWin == null) p.isWin = false;
+                    if (p.prizeName == null) p.prizeName = [];
+                    if (p.prizeTime == null) p.prizeTime = [];
+                    if (p.prizeId == null) p.prizeId = [];
+                });
+
+                this.personConfig.allPersonList.push(...uniqueNewPersons);
+            }
+        }
+
     },
     persist: {
         enabled: true,

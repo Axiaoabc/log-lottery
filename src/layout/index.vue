@@ -30,5 +30,10 @@ const scrollToTop=()=>{
   </div>
 </template>
 <style scoped lang="scss">
-
+.main-container{
+  background-image: url('@/assets/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 </style>

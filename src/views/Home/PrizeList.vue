@@ -174,7 +174,7 @@ onMounted(() => {
         <div ref="prizeListContainerRef">
             <div class="h-20 w-72" :class="temporaryPrize.isShow ? 'current-prize' : ''" v-if="temporaryPrize.isShow">
                 <div
-                    class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-base-100">
+                    class="relative flex flex-row items-center justify-between w-full h-full shadow-xl card bg-[#931E29]">
                     <div v-if="temporaryPrize.isUsed"
                         class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
                     <figure class="w-10 h-10 rounded-xl m-5">
@@ -209,17 +209,17 @@ onMounted(() => {
             </div>
             <transition name="prize-list" :appear="true">
                 <div v-if="prizeShow && !isMobile && !temporaryPrize.isShow" class="flex items-center">
-                    <ul class="flex flex-col-reverse gap-1 p-2 rounded-xl bg-slate-500/50" ref="prizeListRef">
+                    <ul class="flex flex-col-reverse gap-1 p-2 rounded-xl bg-[#611122]/50" ref="prizeListRef">
                         <li v-for="item in localPrizeList" :key="item.id"
                             :class="currentPrize.id == item.id ? 'current-prize' : ''">
-                            <div class="relative flex flex-row items-center justify-between w-72 h-20 shadow-xl card bg-base-100"
+                            <div class="relative flex flex-row items-center justify-between w-72 h-20 shadow-xl card bg-[#931E29]"
                                 v-if="item.isShow">
                                 <div v-if="item.isUsed"
                                     class="absolute z-50 w-full h-full bg-gray-800/70 item-mask rounded-xl"></div>
                                 <figure class="w-10 h-10 rounded-xl m-5">
                                     <ImageSync v-if="item.picture.url" :imgItem="item.picture"></ImageSync>
                                     <img v-else :src="defaultPrizeImage" alt="Prize"
-                                        class="object-cover h-full rounded-xl" />
+                                        class="object-cover h-full rounded-xl bg-white" />
                                 </figure>
                                 <div class="p-0 text-center card-body">
                                     <div class="tooltip tooltip-left" :data-tip="item.name">
@@ -327,7 +327,9 @@ onMounted(() => {
     border-bottom-right-radius: 20px;
     z-index: -1;
 }
-
+.card{
+    border: 1px solid #CE4F52;
+}
 
 @keyframes an-at-keyframe-css-at-rule-that-translates-via-the-transform-property-the-background-by-negative-25-percent-of-its-width-so-that-it-gives-a-nice-border-animation_-We-use-the-translate-property-to-have-a-nice-transition-so-it_s-not-a-jerk-of-a-start-or-stop {
     to {

@@ -80,7 +80,7 @@ watch(() => imgUploadToast.value, (val) => {
     </div>
 
     <div>
-        <div class="">
+        <div class="mt-5">
             <label for="explore">
                 <input type="file" class="" id="explore" style="display: none" @change="handleFileChange"
                     :accept="limitType" />

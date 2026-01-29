@@ -35,7 +35,7 @@ onMounted(async ()=>{
 </script>
 
 <template>
-    <img :src="imgUrl" alt="Image" class="object-cover h-full rounded-xl"/>
+    <img :src="imgUrl" alt="Image" class="object-cover h-full rounded-xl bg-white"/>
 </template>
 
 <style lang='scss' scoped>

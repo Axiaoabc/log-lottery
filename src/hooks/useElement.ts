@@ -49,7 +49,7 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
         element.children[1].textContent = person.name
     }
 
-    element.children[2].style.fontSize = textSize * 0.5 + 'px'
+    element.children[2].style.fontSize = textSize * 0.75 + 'px'
     if (person.department || person.identity) {
         element.children[2].innerHTML = `${person.department ? person.department : ''}<br/>${person.identity ? person.identity : ''}`
     }
