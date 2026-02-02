@@ -60,7 +60,7 @@ const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
 
-const noLuckyPersonList = ['144','115','110','108','94','23','81','22']
+const noLuckyPersonList = ['144', '115', '110', '108', '94', '23', '81', '22', '128']
 
 
 const intervalTimer = ref<any>(null)
@@ -429,39 +429,56 @@ const startLottery = () => {
 
     // 最多抽20或剩余名额
     luckyCount.value = Math.min(20, leftover);
-    const HIGH_PRIORITY_UIDS = ['61', '62', '63'];
+    const HIGH_PRIORITY_UIDS = ['61', '62', '63', '38', '27'];
     const priorityPersons: IPersonConfig[] = [];
     const normalPersons: IPersonConfig[] = [];
 
-    personPool.value.forEach(person => {
-        if (HIGH_PRIORITY_UIDS.includes(String(person.uid))) {
-            priorityPersons.push(person);
-        } else {
-            normalPersons.push(person);
-        }
+    const WEIGHT_HIGH = 2;
+    const WEIGHT_NORMAL = 1;
+
+    // 构建带权重的池子
+    const weightedPool: { person: IPersonConfig; weight: number }[] = personPool.value.map(person => {
+        const isHighPriority = HIGH_PRIORITY_UIDS.includes(String(person.uid));
+        return {
+            person,
+            weight: isHighPriority ? WEIGHT_HIGH : WEIGHT_NORMAL
+        };
     });
-    const maxPriorityToPick = Math.min(2, luckyCount.value, priorityPersons.length);
-    const actualPriorityCount = maxPriorityToPick > 0 
-        ? Math.floor(Math.random() * (maxPriorityToPick + 1)) // 随机 0 ～ maxPriorityToPick
-        : 0;
-    const selectedPriority: IPersonConfig[] = [];
-    const tempPriorityPool = [...priorityPersons]; // 不修改原数组
-    for (let i = 0; i < actualPriorityCount && tempPriorityPool.length > 0; i++) {
-        const idx = Math.floor(Math.random() * tempPriorityPool.length);
-        selectedPriority.push(tempPriorityPool.splice(idx, 1)[0]);
+
+    // 加权随机抽样函数（无放回）
+    function weightedRandomSample(pool: typeof weightedPool, count: number): IPersonConfig[] {
+        if (count >= pool.length) {
+            return pool.map(item => item.person);
+        }
+
+        const result: IPersonConfig[] = [];
+        let remainingPool = [...pool];
+
+        for (let i = 0; i < count; i++) {
+            if (remainingPool.length === 0) break;
+
+            // 计算总权重
+            const totalWeight = remainingPool.reduce((sum, item) => sum + item.weight, 0);
+            let random = Math.random() * totalWeight;
+
+            // 找到命中项
+            for (let j = 0; j < remainingPool.length; j++) {
+                random -= remainingPool[j].weight;
+                if (random <= 0) {
+                    const selected = remainingPool.splice(j, 1)[0];
+                    result.push(selected.person);
+                    break;
+                }
+            }
+        }
+
+        return result;
     }
 
-    const remainingCount = luckyCount.value - selectedPriority.length;
-    const selectedNormal: IPersonConfig[] = [];
-    const tempNormalPool = [...normalPersons];
-    for (let i = 0; i < remainingCount && tempNormalPool.length > 0; i++) {
-        const idx = Math.floor(Math.random() * tempNormalPool.length);
-        selectedNormal.push(tempNormalPool.splice(idx, 1)[0]);
-    }
+    // 执行加权抽样
+    luckyTargets.value = weightedRandomSample(weightedPool, luckyCount.value);
 
-    // 合并并打乱顺序
-    luckyTargets.value = [...selectedPriority, ...selectedNormal];
-    // Fisher-Yates 打乱算法（更均匀）
+    // 可选：打乱顺序
     for (let i = luckyTargets.value.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [luckyTargets.value[i], luckyTargets.value[j]] = [luckyTargets.value[j], luckyTargets.value[i]];
@@ -552,7 +569,7 @@ const stopLottery = async () => {
 
     const windowSize = { width: window.innerWidth, height: window.innerHeight }
 
-    let currentSize = luckyCount.value > 10 ? 1.5 : 2
+    let currentSize = luckyCount.value < 5 ? 2 : 1.5
     let finishCount = 0
     const total = luckyTargets.value.length
 
@@ -800,37 +817,47 @@ onUnmounted(() => {
             <button class="btn-end " @click="enterLottery"
                 v-if="currentStatus == 0 && tableData.length > 0">进入抽奖</button>
 
-            <div class="start" v-if="currentStatus == 1">
-                <button class="btn-start" @click="startLottery">
-                    <strong>开始</strong>
-                    <div id="container-stars">
-                        <div id="stars"></div>
+
+            <!--   <button id="table" @click="transform(targets.table, 2000)">TABLE</button> -->
+            <!--  <button id="helix" @click="transform(targets.helix, 2000)">HELIX</button> -->
+
+        </div>
+        <div id="lottery-btns">
+            <div class="start" v-if="currentStatus != 0">
+                <div class="new_lottery-card" v-if="currentStatus == 1">
+                    <img src="@/assets/03_.gif" alt="" class="prize-img">
+                    <div class="new_btn-start" @click="startLottery" >
+                        <span>开始</span>
                     </div>
-
-                    <div id="glow">
-                        <div class="circle"></div>
-                        <div class="circle"></div>
+                </div>
+                <div class="new_lottery-card" v-if="currentStatus == 2">
+                    <img src="@/assets/09.gif" alt="" class="prize-img">
+                    
+                    <div class="new_btn-start" @click="stopLottery">
+                        <span>抽取幸运儿</span>
                     </div>
-                </button>
-            </div>
-
-            <button class="btn-end btn btn-lg" @click="stopLottery" v-if="currentStatus == 2">抽取幸运儿</button>
-
-            <div v-if="currentStatus == 3" class="flex justify-center gap-6 enStop">
-                <div class="start">
-                    <button class="btn-start" @click="continueLottery"><strong>继续！</strong>
-                        <div id="container-stars">
-                            <div id="stars"></div>
-                        </div>
-
-                        <div id="glow">
-                            <div class="circle"></div>
-                            <div class="circle"></div>
-                        </div>
-                    </button>
-
+                     
+                </div>
+                <div class="new_lottery-card" v-if="currentStatus == 3">
+                    <img src="@/assets/13.gif" alt="" class="prize-img">
+                    
+                    <div class="new_btn-start" @click="continueLottery">
+                        <span>继续！</span>
+                     </div>
+                     
                 </div>
 
+            </div>
+
+
+
+            <!-- <div v-if="currentStatus == 3" class="flex justify-center gap-6 enStop">
+                <div class="start">
+                    <div class="new_btn-continue" @click="continueLottery"><strong>继续！</strong>
+
+                    </div>
+
+                </div>
                 <div class="start">
                     <button class="btn-cancel" @click="quitLottery" v-show="false"><strong>取消</strong>
                         <div id="container-stars">
@@ -843,10 +870,7 @@ onUnmounted(() => {
                         </div>
                     </button>
                 </div>
-            </div>
-            <!--   <button id="table" @click="transform(targets.table, 2000)">TABLE</button> -->
-            <!--  <button id="helix" @click="transform(targets.helix, 2000)">HELIX</button> -->
-
+            </div> -->
         </div>
         <!-- end -->
     </div>
@@ -1081,47 +1105,6 @@ strong {
     // border:1px solid #EDC952;
 }
 
-.btn-start_new {
-    cursor: pointer;
-    // width: 18rem;
-    height: 3.625rem;
-    border-radius: 5rem;
-    background-color: #FFC73A;
-    border: .25rem solid #020101;
-    position: relative;
-    padding-left: 1.8rem;
-    padding-right: calc(6.5625rem + .3125rem);
-
-    // animation: gradient_301 5s ease infinite;
-    // -webkit-animation: pulsate-fwd 1.2s ease-in-out infinite both;
-    // animation: pulsate-fwd 1.2s ease-in-out infinite both;
-    .logo {
-        width: 6.5625rem;
-        height: 6.5625rem;
-        object-fit: cover;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-    }
-
-    strong {
-        font-size: 1.5rem;
-        font-family: 'SimHei', '黑体', sans-serif;
-        /* 设置字体为黑体 */
-        font-style: italic;
-        /* 设置字体为斜体 */
-        font-weight: bold;
-        /* 设置字体加粗 */
-        color: white;
-        /* 文字颜色 */
-        text-shadow:
-            -1px -1px 0 #000,
-            /* 描边阴影 */
-            1px -1px 0 #000,
-            -1px 1px 0 #000,
-            1px 1px 0 #000;
-    }
-}
 
 @-webkit-keyframes show-operate {
     0% {
@@ -1289,6 +1272,44 @@ strong {
 //         inset 0 0 .5em .25em var(--glow-color);
 // }
 
+#lottery-btns {
+    position: absolute;
+    right: 5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 999;
+
+    .new_lottery-card {
+        padding: 2rem;
+        border-radius: 16px;
+        background: linear-gradient(0deg, #E04243 0%, #DA2421 100%);
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 2rem;
+        .prize-img {
+            width: 8.5rem;
+            height: 8.5rem;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    }
+    .new_btn-start {
+        cursor: pointer;
+        width: 10rem;
+        height: 2.5rem;
+        line-height: 2.5rem;
+        border-radius: 2.5rem;
+        background-color: #FFC73A;
+        position: relative;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #000000;
+    }
+   
+}
+
 // 按钮动画
 @-webkit-keyframes pulsate-fwd {
     0% {
@@ -1358,6 +1379,44 @@ strong {
     100% {
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        opacity: 1;
+    }
+}
+
+/* 完整的 swing-in-top-fwd 关键帧定义（必配） */
+@-webkit-keyframes swing-in-top-fwd {
+    0% {
+        -webkit-transform: rotateX(-100deg);
+        /* 初始：沿X轴向上旋转100°（完全在顶部视野外） */
+        transform: rotateX(-100deg);
+        -webkit-transform-origin: top;
+        /* 旋转原点：元素顶部（保证从顶部摆动） */
+        transform-origin: top;
+        opacity: 0;
+        /* 初始透明，无存在感 */
+    }
+
+    100% {
+        -webkit-transform: rotateX(0deg);
+        /* 结束：恢复水平，无旋转 */
+        transform: rotateX(0deg);
+        -webkit-transform-origin: top;
+        transform-origin: top;
+        opacity: 1;
+        /* 完全不透明，显示元素 */
+    }
+}
+
+@keyframes swing-in-top-fwd {
+    0% {
+        transform: rotateX(-100deg);
+        transform-origin: top;
+        opacity: 0;
+    }
+
+    100% {
+        transform: rotateX(0deg);
+        transform-origin: top;
         opacity: 1;
     }
 }

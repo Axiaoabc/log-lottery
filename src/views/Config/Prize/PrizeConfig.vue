@@ -147,7 +147,7 @@ watch(() => prizeList.value, (val: IPrizeConfig[]) => {
 </script>
 
 <template>
-    <div>
+    <div class="overflow-y-auto">
         <h2>奖项配置</h2>
         <div class="flex w-full gap-3">
             <button class="btn btn-info btn-sm" @click="addPrize">添加</button>

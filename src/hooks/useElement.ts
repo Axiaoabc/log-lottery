@@ -13,7 +13,7 @@ export const useElementStyle = (element: any, person: IPersonConfig, index: numb
         element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     }
     else if (mod == 'lucky') {
-        element.style.backgroundColor = rgba(cardColor, 0.8)
+        element.style.backgroundColor = rgba(cardColor, 0.85)
         element.style.border = `1px solid ${rgba(cardColor, 0.25)}`
         element.style.boxShadow = `0 0 12px ${rgba(cardColor, 0.5)}`
     }
@@ -79,10 +79,10 @@ export const useElementPosition = (element: any, count: number, cardSize: { widt
     let xTable = 0
     let yTable = 0
     let mul = currentSize == 2 ? 1 : 2
-
+    const yOffset = 50; 
     const centerPosition = {
         x: 0,
-        y: windowSize.height / 2 - cardSize.height / (mul*2)
+        y: windowSize.height / 2 - cardSize.height / (mul*2) + yOffset
     }
     const index = cardIndex % 5
     if (index == 0) {
@@ -90,9 +90,11 @@ export const useElementPosition = (element: any, count: number, cardSize: { widt
         yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + (60 / mul))
     }
     else {
-        xTable = index % 2 === 0 ? Math.ceil(index / 2) * (cardSize.width + (100 / mul)) : -Math.ceil(index / 2) * (cardSize.width + (100 / mul))
+        xTable = index % 2 === 0 ? Math.ceil(index / 2) * (cardSize.width + (60 / mul)) : -Math.ceil(index / 2) * (cardSize.width + (60 / mul))
         yTable = centerPosition.y - Math.floor(cardIndex / 5) * (cardSize.height + (60 / mul))
     }
 
     return { xTable, yTable }
 }
+
+
