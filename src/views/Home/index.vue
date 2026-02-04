@@ -60,7 +60,6 @@ const luckyCardList = ref<number[]>([])
 let luckyCount = ref(10)
 const personPool = ref<IPersonConfig[]>([])
 
-const noLuckyPersonList = ['144', '115', '110', '108', '94', '23', '81', '22', '128']
 
 
 const intervalTimer = ref<any>(null)
@@ -102,7 +101,7 @@ const init = () => {
     renderer.value.setSize(width, height * 0.9)
     renderer.value.domElement.style.position = 'absolute';
     // 垂直居中
-    renderer.value.domElement.style.paddingTop = '50px'
+    renderer.value.domElement.style.paddingTop = '0'
     renderer.value.domElement.style.top = '50%';
     renderer.value.domElement.style.left = '50%';
     renderer.value.domElement.style.transform = 'translate(-50%, -50%)';
@@ -395,7 +394,7 @@ const startLottery = () => {
     if (currentPrize.value.isExclude) {
         personPool.value = personPool.value.filter((item: IPersonConfig) => {
             const uidStr = String(item.uid)
-            return !excludedUserIds.includes(uidStr) && !noLuckyPersonList.includes(uidStr);
+            return !excludedUserIds.includes(uidStr);
         })
     }
 
@@ -429,68 +428,14 @@ const startLottery = () => {
 
     // 最多抽20或剩余名额
     luckyCount.value = Math.min(20, leftover);
-    const HIGH_PRIORITY_UIDS = ['61', '62', '63', '38', '27'];
-    const priorityPersons: IPersonConfig[] = [];
-    const normalPersons: IPersonConfig[] = [];
 
-    const WEIGHT_HIGH = 2;
-    const WEIGHT_NORMAL = 1;
-
-    // 构建带权重的池子
-    const weightedPool: { person: IPersonConfig; weight: number }[] = personPool.value.map(person => {
-        const isHighPriority = HIGH_PRIORITY_UIDS.includes(String(person.uid));
-        return {
-            person,
-            weight: isHighPriority ? WEIGHT_HIGH : WEIGHT_NORMAL
-        };
-    });
-
-    // 加权随机抽样函数（无放回）
-    function weightedRandomSample(pool: typeof weightedPool, count: number): IPersonConfig[] {
-        if (count >= pool.length) {
-            return pool.map(item => item.person);
+    for (let i = 0; i < luckyCount.value; i++) {
+        if (personPool.value.length > 0) {
+            const randomIndex = Math.floor(Math.random() * personPool.value.length);
+            luckyTargets.value.push(personPool.value[randomIndex])
+            personPool.value.splice(randomIndex, 1)
         }
-
-        const result: IPersonConfig[] = [];
-        let remainingPool = [...pool];
-
-        for (let i = 0; i < count; i++) {
-            if (remainingPool.length === 0) break;
-
-            // 计算总权重
-            const totalWeight = remainingPool.reduce((sum, item) => sum + item.weight, 0);
-            let random = Math.random() * totalWeight;
-
-            // 找到命中项
-            for (let j = 0; j < remainingPool.length; j++) {
-                random -= remainingPool[j].weight;
-                if (random <= 0) {
-                    const selected = remainingPool.splice(j, 1)[0];
-                    result.push(selected.person);
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
-
-    // 执行加权抽样
-    luckyTargets.value = weightedRandomSample(weightedPool, luckyCount.value);
-
-    // 可选：打乱顺序
-    for (let i = luckyTargets.value.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [luckyTargets.value[i], luckyTargets.value[j]] = [luckyTargets.value[j], luckyTargets.value[i]];
-    }
-
-    // for (let i = 0; i < luckyCount.value; i++) {
-    //     if (personPool.value.length > 0) {
-    //         const randomIndex = Math.floor(Math.random() * personPool.value.length);
-    //         luckyTargets.value.push(personPool.value[randomIndex])
-    //         personPool.value.splice(randomIndex, 1)
-    //     }
-    // }
     toast.open({
         message: `现在抽取${currentPrize.value.name} ${leftover}人`,
         type: 'default',
@@ -799,10 +744,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 left-1/2">
+    <div class="absolute z-10 flex flex-col items-center justify-center -translate-x-1/2 -right-28 bottom-24">
         <!-- <h2 class="pt-12 m-0 mb-12 font-mono tracking-wide text-center leading-12 header-title"
             :style="{ fontSize: textSize * 1.5 + 'px', color: textColor }">{{ topTitle }}</h2> -->
-        <img src="@/assets/logo.png" alt="" style="height: 120px;padding-top: 24px;">
+        <img src="@/assets/logo.png" alt="" style="height: 96px;padding-top: 24px;">
         <div class="flex gap-3">
             <button v-if="tableData.length <= 0" class="cursor-pointer btn btn-outline btn-secondary btn-lg"
                 @click="router.push('config')">暂无人员信息，前往导入</button>
